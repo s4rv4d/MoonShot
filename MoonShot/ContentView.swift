@@ -10,13 +10,33 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationView {
-            List(0..<100) { row in
-                NavigationLink(destination:Text("Detail \(row)")){
-                    Text("row \(row)")
+        Button("Decode JSON") {
+            let input = """
+                {
+                    "name" : "Sarvad",
+                    "address" : {
+                                "street" : "K Block",
+                                "city" : "Vellore"
+                                }
                 }
+            """
+            
+            //more code
+            struct User: Codable {
+                let name: String
+                let address: Address
             }
-            .navigationBarTitle(Text("SwiftUI"))
+            
+            struct Address: Codable {
+                let street: String
+                let city: String
+            }
+            
+            let data = Data(input.utf8)
+            let decoder = JSONDecoder()
+            if let user = try? decoder.decode(User.self, from: data) {
+                print(user.address.street)
+            }
         }
     }
 }
